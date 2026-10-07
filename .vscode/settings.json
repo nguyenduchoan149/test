@@ -1,0 +1,25 @@
+{
+  "cobol-lsp.cpy-manager.paths-local": [
+    "copybook",
+    "${workspaceFolder}/copybook"
+  ],
+  "cobol-lsp.cpy-manager.copybook-extensions": [
+    ".cpy",
+    ".copy",
+    ".CPY"
+  ],
+  "cobol-lsp.subroutine-manager.paths-local": [
+    "src/utils",
+    "src/main",
+    "mainframe-cobol/calculator/src/utils",
+    "mainframe-cobol/calculator/src/main",
+    "${workspaceFolder}/src/utils",
+    "${workspaceFolder}/src/main"
+  ],
+  "files.associations": {
+    "*.cbl": "cobol",
+    "*.CBL": "cobol",
+    "*.cpy": "cobol",
+    "*.CPY": "cobol"
+  }
+}

@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Calculator</title>
+  <style>
+    :root {
+      --shell: #2b2f36;
+      --face: #1e2228;
+      --lcd: #c7d6b8;
+      --lcd-ink: #1a2412;
+      --key: #3a414c;
+      --key-op: #4a5563;
+      --key-fn: #2f6f6a;
+      --key-eq: #c45c26;
+      --ink: #f2f4f7;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      display: grid;
+      place-items: center;
+      font-family: "IBM Plex Mono", "Consolas", monospace;
+      background:
+        linear-gradient(160deg, #5a6570 0%, #2d333b 45%, #1b1f24 100%);
+      color: var(--ink);
+      padding: 1rem;
+    }
+    .calc {
+      width: min(340px, 100%);
+      background: var(--shell);
+      border-radius: 18px;
+      padding: 1rem 0.9rem 1.1rem;
+      box-shadow:
+        0 18px 40px rgba(0, 0, 0, 0.45),
+        inset 0 1px 0 rgba(255, 255, 255, 0.08);
+    }
+    .brand {
+      font-size: 0.72rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      opacity: 0.7;
+      margin: 0 0 0.55rem 0.15rem;
+    }
+    .display {
+      background: var(--lcd);
+      color: var(--lcd-ink);
+      border-radius: 10px;
+      min-height: 4.2rem;
+      padding: 0.7rem 0.85rem;
+      margin-bottom: 0.85rem;
+      box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.25);
+      display: flex;
+      align-items: flex-end;
+      word-break: break-all;
+    }
+    #expr {
+      font-size: 1.35rem;
+      line-height: 1.25;
+      min-height: 1.7rem;
+      width: 100%;
+    }
+    .keys {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 0.45rem;
+    }
+    button {
+      border: 0;
+      border-radius: 10px;
+      min-height: 3rem;
+      font: inherit;
+      font-size: 1.05rem;
+      color: var(--ink);
+      background: var(--key);
+      cursor: pointer;
+      box-shadow: 0 2px 0 #22272e;
+    }
+    button:active { transform: translateY(1px); box-shadow: none; }
+    button.op { background: var(--key-op); }
+    button.fn { background: var(--key-fn); }
+    button.eq { background: var(--key-eq); grid-column: span 2; }
+    button.wide { grid-column: span 2; }
+  </style>
+</head>
+<body>
+  <div class="calc">
+    <div class="brand">SNL · COBOL Lab</div>
+    <div class="display">
+      <div id="expr"></div>
+    </div>
+    <div class="keys" id="keys">
+      <button type="button" class="fn" data-act="clear">C</button>
+      <button type="button" class="fn" data-act="back">⌫</button>
+      <button type="button" class="fn" data-key="(">(</button>
+      <button type="button" class="fn" data-key=")">)</button>
+
+      <button type="button" class="fn" data-key="sqrt(">√</button>
+      <button type="button" class="fn" data-key="^2">x²</button>
+      <button type="button" class="op" data-key="/">÷</button>
+      <button type="button" class="op" data-key="*">×</button>
+
+      <button type="button" data-key="7">7</button>
+      <button type="button" data-key="8">8</button>
+      <button type="button" data-key="9">9</button>
+      <button type="button" class="op" data-key="-">−</button>
+
+      <button type="button" data-key="4">4</button>
+      <button type="button" data-key="5">5</button>
+      <button type="button" data-key="6">6</button>
+      <button type="button" class="op" data-key="+">+</button>
+
+      <button type="button" data-key="1">1</button>
+      <button type="button" data-key="2">2</button>
+      <button type="button" data-key="3">3</button>
+      <button type="button" data-key=".">.</button>
+
+      <button type="button" class="wide" data-key="0">0</button>
+      <button type="button" class="eq" data-act="send">=</button>
+    </div>
+  </div>
+
+  <script>
+    const exprEl = document.getElementById('expr');
+    let raw = '';
+
+    function render() {
+      exprEl.textContent = raw;
+    }
+
+    async function sendRaw() {
+      await fetch('/api/calculate', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ raw }),
+      });
+    }
+
+    document.getElementById('keys').addEventListener('click', (e) => {
+      const btn = e.target.closest('button');
+      if (!btn) return;
+
+      if (btn.dataset.key != null) {
+        raw += btn.dataset.key;
+        render();
+        return;
+      }
+
+      if (btn.dataset.act === 'clear') {
+        raw = '';
+        render();
+        return;
+      }
+
+      if (btn.dataset.act === 'back') {
+        raw = raw.slice(0, -1);
+        render();
+        return;
+      }
+
+      if (btn.dataset.act === 'send') {
+        sendRaw();
+      }
+    });
+
+    render();
+  </script>
+</body>
+</html>

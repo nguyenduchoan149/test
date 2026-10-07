@@ -1,0 +1,28 @@
+{
+  "folders": [
+    {
+      "name": "calculator",
+      "path": "."
+    }
+  ],
+  "settings": {
+    "cobol-lsp.cpy-manager.paths-local": [
+      "copybook"
+    ],
+    "cobol-lsp.cpy-manager.copybook-extensions": [
+      ".cpy",
+      ".copy",
+      ".CPY"
+    ],
+    "cobol-lsp.subroutine-manager.paths-local": [
+      "src/utils",
+      "src/main"
+    ],
+    "files.associations": {
+      "*.cbl": "cobol",
+      "*.CBL": "cobol",
+      "*.cpy": "cobol",
+      "*.CPY": "cobol"
+    }
+  }
+}
